@@ -52,7 +52,7 @@ class Simon:
     # do not use C:\\
     # Do not use the root directory of the VS code project
     BUTTONS = [
-        Button(switch=20, led=6, sound=os.path.join("sounds" + "one.wav"), color="red"),
+        Button(switch=20, led=6, sound=os.path.join("sounds", "one.wav"), color="red"),
         Button(switch=16, led=13, sound=os.path.join("sounds", "two.wav"), color="blue"),
         Button(switch=12, led=19, sound=os.path.join("sounds", "three.wav"), color="yellow"),
         Button(switch=26, led=21, sound=os.path.join("sounds", "four.wav"), color="green")
