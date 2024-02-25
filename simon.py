@@ -92,7 +92,36 @@ class Simon:
     
     def playback(self):
         for button in self.sequence:
-            button.respond()
+            if self.round_num < 5:
+                button.turn_light_on()
+                button.sound.play()
+                sleep(1)
+                button.turn_light_off()
+                sleep(0.5)
+            elif self.round_num < 7:
+                button.turn_light_on()
+                button.sound.play()
+                sleep(.9)
+                button.turn_light_off()
+                sleep(0.4)
+            elif self.round_num < 10:
+                button.turn_light_on()
+                button.sound.play()
+                sleep(0.8)
+                button.turn_light_off()
+                sleep(0.3)
+            elif self.round_num < 13:
+                button.turn_light_on()
+                button.sound.play()
+                sleep(0.7)
+                button.turn_light_off()
+                sleep(0.25)
+            else:
+                button.turn_light_on()
+                button.sound.play()
+                sleep(0.6)
+                button.turn_light_off()
+                sleep(0.15)
     
     def wait_for_press(self):
         while True:
