@@ -31,11 +31,8 @@ class Button:
         GPIO.output(self.led, False)
         
     def is_pressed(self):
-        result = GPIO.input(self.switch)
-        if result == True:
-            return True
-        else:
-            return False
+        # returns true or false depending on the switch
+        return GPIO.input(self.switch)
         
     def respond(self):
         self.turn_light_on()
@@ -70,19 +67,19 @@ class Simon:
             print(*args)
             
     def blink_all_buttons(self):
-        leds = []
-        for button in Simon.BUTTONS:
-            leds.append(button.led)
-        GPIO.output(leds, True)
-        sleep(0.5)
-        GPIO.output(leds, False)
-        sleep(0.5)
-    
+        # leds = []
         # for button in Simon.BUTTONS:
-        #     button.turn_light_on()
-        #     sleep(0.5)
-        #     button.turn_light_off()
-        #     sleep(0.5)
+        #     leds.append(button.led)
+        # GPIO.output(leds, True)
+        # sleep(0.5)
+        # GPIO.output(leds, False)
+        # sleep(0.5)
+    
+        for button in Simon.BUTTONS:
+            button.turn_light_on()
+            sleep(0.5)
+            button.turn_light_off()
+            sleep(0.5)
             
     def add_to_sequence(self):
         random_button = choice(Simon.BUTTONS)
@@ -95,11 +92,7 @@ class Simon:
     
     def playback(self):
         for button in self.sequence:
-            button.turn_light_on()
-            button.sound.play()
-            sleep(1)
-            button.turn_light_off()
-            sleep(0.5)
+            button.respond()
     
     def wait_for_press(self):
         while True:
@@ -124,6 +117,7 @@ class Simon:
         # use control+c to kill the game
         try:
             while True:
+                self.add_to_sequence()
                 self.playback()
                 self.debug_out(*self.sequence)
                 for button in self.sequence:
