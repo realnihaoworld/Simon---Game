@@ -58,7 +58,7 @@ class Simon:
         Button(switch=26, led=21, sound=os.path.join("sounds", "four.wav"), color="green")
     ]
     
-    def __init__(self, debug=True):
+    def __init__(self, debug=False):
         self.debug = debug
         self.sequence: list[Button] = [] # python 3.10+ only, for the type hinting
         
@@ -88,29 +88,32 @@ class Simon:
     def lose(self):
         for _ in range(4):
             self.blink_all_buttons()
+        self.scoring()
         GPIO.cleanup()
     
     def playback(self):
         for button in self.sequence:
-            if self.round_num < 5:
+            # changes the led sequence speed depending on the round you are on
+            num = len(self.sequence)
+            if num < 5:
                 button.turn_light_on()
                 button.sound.play()
                 sleep(1)
                 button.turn_light_off()
                 sleep(0.5)
-            elif self.round_num < 7:
+            elif num < 7:
                 button.turn_light_on()
                 button.sound.play()
                 sleep(.9)
                 button.turn_light_off()
                 sleep(0.4)
-            elif self.round_num < 10:
+            elif num < 10:
                 button.turn_light_on()
                 button.sound.play()
                 sleep(0.8)
                 button.turn_light_off()
                 sleep(0.3)
-            elif self.round_num < 13:
+            elif num < 13:
                 button.turn_light_on()
                 button.sound.play()
                 sleep(0.7)
@@ -135,6 +138,24 @@ class Simon:
         if pressed_button.switch != correct_button.switch:
             self.lose()
             
+    def light_show(self):
+        """A function to ripple lights"""
+        for button in Simon.BUTTONS:
+            button.turn_light_on()
+            sleep(0.5)
+            button.turn_light_off()
+
+        for button in reversed(Simon.BUTTONS):
+            button.turn_light_on()
+            sleep(0.5)
+            button.turn_light_off()
+    
+    def scoring(self):
+        if len(self.sequence) == 3:
+            print("You didn't even make it to a sequence!")
+        else:
+            print(f"You made it to a sequence of {len(self.sequence)}!")
+            
     
     def run(self):
         print(Simon.WELCOME_MESSAGE)
@@ -152,6 +173,13 @@ class Simon:
                 for button in self.sequence:
                     pressed_button = self.wait_for_press()
                     self.check_input(pressed_button, button)
+                    
+                if len(self.sequence) in [15, 20, 25, 30, 35, 40, 45, 50]:   # Checks the score for when to run light_show.
+                    self.light_show()
+
+                # USE THIS WHEN TESTING
+                #if len(self.sequence) in [1, 2, 3, 4, 5]: # Debug
+                    #self.light_show()
                     
         except KeyboardInterrupt:
             GPIO.cleanup()
