@@ -1,4 +1,7 @@
-# Names: Danison Zhang, Colin Bass, Jacob James
+# Names: 
+# Danison Zhang - implemented scoring feature
+# Colin Bass - implemented lighting feature
+# Jacob James - implemented speed increase feature
 
 import pineworkslabs.RPi as GPIO
 from time import sleep
@@ -134,10 +137,12 @@ class Simon:
                     button.respond()
                     return button
     
+    # checks if the button pressed corresponds with the correct color in the sequence
     def check_input(self, pressed_button, correct_button):
         if pressed_button.switch != correct_button.switch:
             self.lose()
-            
+    
+    # celebrates milestones with a quick light show
     def light_show(self):
         """A function to ripple lights"""
         for button in Simon.BUTTONS:
@@ -150,6 +155,7 @@ class Simon:
             sleep(0.5)
             button.turn_light_off()
     
+    # prints out the players score at the end of a game
     def scoring(self):
         if len(self.sequence) == 3:
             print("You didn't even make it to a sequence!")
@@ -174,7 +180,8 @@ class Simon:
                     pressed_button = self.wait_for_press()
                     self.check_input(pressed_button, button)
                     
-                if len(self.sequence) in [15, 20, 25, 30, 35, 40, 45, 50]:   # Checks the score for when to run light_show.
+                if len(self.sequence) in [10, 15, 20, 25, 30, 35, 40, 45, 50]:   # Checks the score for when to run light_show.
+                    print("Light show!")
                     self.light_show()
 
                 # USE THIS WHEN TESTING
